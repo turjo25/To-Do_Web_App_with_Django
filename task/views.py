@@ -78,7 +78,7 @@ def register(request):
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
             user = authenticate(username=username,password=password)
-            login(user)
+            login(request, user)
             return redirect('task_list')
     else:
         form = UserCreationForm()
