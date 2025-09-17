@@ -71,18 +71,32 @@ def task_mark_completed(request, task_id):
     return redirect('task_list')
 
 #user register
+# def register(request):
+#     if request.method == 'POST':
+#         form = UserCreationForm(request.POST)
+#         if form.is_valid():
+#             username = form.cleaned_data.get('username')
+#             password = form.cleaned_data.get('password')
+#             user = authenticate(username=username,password=password)
+#             login(request, user)
+#             return redirect('task_list')
+#     else:
+#         form = UserCreationForm()
+#     return render(request,'register.html',{'form':form})
 def register(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
-            user = authenticate(username=username,password=password)
+            # Save user to the database
+            user = form.save()
+            
+            # Log the user in immediately
             login(request, user)
+            
             return redirect('task_list')
     else:
         form = UserCreationForm()
-    return render(request,'register.html',{'form':form})
+    return render(request, 'register.html', {'form': form})
 
 #pass change
 def pass_change(request):
