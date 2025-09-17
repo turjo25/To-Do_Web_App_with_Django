@@ -23,17 +23,21 @@ A full-featured To-Do List web application built with Python and the Django Fram
 
 The project is organized into a main Django project directory (`todo`) and a primary application (`task`).
 ```python
-.
-├── todo/             # Main Django project directory
-│   ├── settings.py
-│   ├── urls.py
-│   └── ...
+├── todo/
+│   ├── __init__.py
+│   ├── asgi.py
+│   ├── settings.py             # Main Django project directory
+│   ├── wsgi.py
+│   └── urls.py
 ├── task/             # The main application for handling tasks
 │   ├── migrations/
 │   ├── templates/    # HTML templates for the app
 │   │   ├── task_list.html
 │   │   ├── login.html
-│   │   └── ...
+│   │   ├── register.html
+│   │   ├── pass_change.html
+│   │   ├── task_detail.html
+│   │   └── task_form.html
 │   ├── admin.py
 │   ├── forms.py
 │   ├── models.py
@@ -44,9 +48,15 @@ The project is organized into a main Django project directory (`todo`) and a pri
 └── manage.py         # Django's command-line utility
 ```
 
-## Setup and Installation
+## Project Link
 
-Follow these steps to get the project running on your local machine.
+I have deployed the project to `render.com` and my project link is:
+[Todo Web App](https://todo-web-app-kg5f.onrender.com)
+<br>
+Feel free to visit my project and send me feedback through linkdin or mail
+<!-- ## Setup and Installation -->
+
+<!-- Follow these steps to get the project running on your local machine.
 
 ### 1. Prerequisites
 
@@ -109,7 +119,7 @@ Follow the prompts to create your username and password.
 
 python manage.py runserver
 ```
-The application will be available at `http://127.0.0.1:8000/.`
+The application will be available at `http://127.0.0.1:8000/.` -->
 
 
 ### License
