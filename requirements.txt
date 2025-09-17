@@ -1,0 +1,17 @@
+asgiref
+certifi
+charset-normalizer
+colorama
+crispy-bootstrap5
+Django
+django-crispy-forms
+idna
+pillow
+python-dateutil
+pytz
+qrcode
+requests
+six
+sqlparse
+tzdata
+urllib3
