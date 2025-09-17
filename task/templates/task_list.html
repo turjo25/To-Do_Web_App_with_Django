@@ -1,106 +1,128 @@
 {% extends "base.html" %}
 {% block content %}
-
-<h2 class="mb-4 fw-bold text-primary">📋 Task List</h2>
-
-<!-- Filter Form -->
-<form method="get" class="mb-5">
-  <div class="row g-3 align-items-center">
-    <!-- Status Filter -->
-    <div class="col-md-4">
-      <select name="status" class="form-select form-select-lg shadow-sm rounded-3">
-        <option value="all" {% if status_filter == 'all' %}selected{% endif %}>All Tasks</option>
-        <option value="completed" {% if status_filter == 'completed' %}selected{% endif %}>Completed</option>
-        <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>Pending</option>
-      </select>
-    </div>
-
-    <!-- Category Filter -->
-    <div class="col-md-4">
-      <select name="category" class="form-select form-select-lg shadow-sm rounded-3">
-        <option value="all" {% if category_filter == 'all' %}selected{% endif %}>All Categories</option>
-        <option value="work" {% if category_filter == 'work' %}selected{% endif %}>Work</option>
-        <option value="personal" {% if category_filter == 'personal' %}selected{% endif %}>Personal</option>
-        <option value="other" {% if category_filter == 'other' %}selected{% endif %}>Other</option>
-      </select>
-    </div>
-
-    <!-- Filter Button -->
-    <div class="col-md-4 text-end">
-      <button type="submit" class="btn btn-primary btn-lg px-4 shadow-sm rounded-3">
-        <i class="bi bi-funnel-fill me-1"></i> Filter
-      </button>
-    </div>
+  <h2 class="mb-4 fw-bold text-primary">📋 Task List</h2>
+  <!-- user details container -->
+  <div class="container mb-4 p-4 border rounded shadow-sm bg-light">
+    <h4 class="fw-bold text-primary mb-3">👤 User Details</h4>
+    <p>
+      <strong>Username:</strong> {{ user.username }}
+    </p>
+    {% comment %} <p>
+      <strong>Email:</strong> {{ user.email }}
+    </p> {% endcomment %}
+    {% if user.first_name or user.last_name %}
+      <p>
+        <strong>Full Name:</strong> {{ user.first_name }} {{ user.last_name }}
+      </p>
+    {% endif %}
+    <p>
+      <strong>Date Joined:</strong> {{ user.date_joined|date:"F j, Y" }}
+    </p>
+    <p>
+      <strong>Last Login:</strong> {{ user.last_login|date:"F j, Y, g:i a" }}
+    </p>
   </div>
-</form>
-
-<div class="container">
-  <div class="row g-5">
-
-    <!-- Completed Tasks -->
-    <div class="col-lg-6">
-      <h3 class="text-success mb-4 fw-bold">
-        <i class="bi bi-check-circle-fill me-2"></i>Completed
-      </h3>
-      <div class="row g-4">
-        {% for task in completed_tasks %}
-        <div class="col-12 col-md-6">
-          <div class="card border-success border-2 shadow-sm h-100 rounded-4 hover-shadow">
-            <div class="card-body">
-              <h5 class="card-title fw-bold text-success">{{ task.title }}</h5>
-              <p class="card-text small text-muted">{{ task.description|truncatewords:15 }}</p>
-              <span class="badge bg-success mb-2 px-3 py-2">Completed</span>
-              <p class="mb-2">
-                <strong>Category:</strong>
-                <span class="badge bg-secondary">{{ task.get_category_display }}</span><br>
-                <strong>Due:</strong> {{ task.due_date }} at {{ task.due_time }}
-              </p>
-              <div class="d-flex gap-2 mt-3">
-                <a href="{% url 'task_detail' task.id %}" class="btn btn-outline-info btn-sm">Details</a>
-                <a href="{% url 'task_delete' task.id %}" class="btn btn-outline-danger btn-sm">Delete</a>
-              </div>
-            </div>
-          </div>
-        </div>
-        {% empty %}
-        <p class="text-muted fst-italic">No completed tasks yet.</p>
-        {% endfor %}
+  <!-- Filter Form -->
+  <form method="get" class="mb-5">
+    <div class="row g-3 align-items-center">
+      <!-- Status Filter -->
+      <div class="col-md-4">
+        <select name="status" class="form-select form-select-lg shadow-sm rounded-3">
+          <option value="all" {% if status_filter == 'all' %}selected{% endif %}>All Tasks</option>
+          <option value="completed"
+                  {% if status_filter == 'completed' %}selected{% endif %}>Completed</option>
+          <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>Pending</option>
+        </select>
+      </div>
+      <!-- Category Filter -->
+      <div class="col-md-4">
+        <select name="category"
+                class="form-select form-select-lg shadow-sm rounded-3">
+          <option value="all" {% if category_filter == 'all' %}selected{% endif %}>All Categories</option>
+          <option value="work" {% if category_filter == 'work' %}selected{% endif %}>Work</option>
+          <option value="personal"
+                  {% if category_filter == 'personal' %}selected{% endif %}>Personal</option>
+          <option value="other" {% if category_filter == 'other' %}selected{% endif %}>Other</option>
+        </select>
+      </div>
+      <!-- Filter Button -->
+      <div class="col-md-4 text-end">
+        <button type="submit" class="btn btn-primary btn-lg px-4 shadow-sm rounded-3">
+          <i class="bi bi-funnel-fill me-1"></i> Filter
+        </button>
       </div>
     </div>
-
-    <!-- Pending Tasks -->
-    <div class="col-lg-6">
-      <h3 class="text-warning mb-4 fw-bold">
-        <i class="bi bi-hourglass-split me-2"></i>Pending
-      </h3>
-      <div class="row g-4">
-        {% for task in pending_tasks %}
-        <div class="col-12 col-md-6">
-          <div class="card border-warning border-2 shadow-sm h-100 rounded-4 hover-shadow">
-            <div class="card-body">
-              <h5 class="card-title fw-bold text-warning">{{ task.title }}</h5>
-              <p class="card-text small text-muted">{{ task.description|truncatewords:15 }}</p>
-              <span class="badge bg-warning text-dark mb-2 px-3 py-2">Pending</span>
-              <p class="mb-2">
-                <strong>Category:</strong>
-                <span class="badge bg-secondary">{{ task.get_category_display }}</span><br>
-                <strong>Due:</strong> {{ task.due_date }} at {{ task.due_time }}
-              </p>
-              <div class="d-flex gap-2 mt-3">
-                <a href="{% url 'task_detail' task.id %}" class="btn btn-outline-info btn-sm">Details</a>
-                <a href="{% url 'task_delete' task.id %}" class="btn btn-outline-danger btn-sm">Delete</a>
-                <a href="{% url 'task_mark_completed' task.id %}" class="btn btn-success btn-sm">Done✅</a>
+  </form>
+  <div class="container">
+    <div class="row g-5">
+      <!-- Completed Tasks -->
+      <div class="col-lg-6">
+        <h3 class="text-success mb-4 fw-bold">
+          <i class="bi bi-check-circle-fill me-2"></i>Completed
+        </h3>
+        <div class="row g-4">
+          {% for task in completed_tasks %}
+            <div class="col-12 col-md-6">
+              <div class="card border-success border-2 shadow-sm h-100 rounded-4 hover-shadow">
+                <div class="card-body">
+                  <h5 class="card-title fw-bold text-success">{{ task.title }}</h5>
+                  <p class="card-text small text-muted">{{ task.description|truncatewords:15 }}</p>
+                  <span class="badge bg-success mb-2 px-3 py-2">Completed</span>
+                  <p class="mb-2">
+                    <strong>Category:</strong>
+                    <span class="badge bg-secondary">{{ task.get_category_display }}</span>
+                    <br>
+                    <strong>Due:</strong> {{ task.due_date }} at {{ task.due_time }}
+                  </p>
+                  <div class="d-flex gap-2 mt-3">
+                    <a href="{% url 'task_detail' task.id %}"
+                       class="btn btn-outline-info btn-sm">Details</a>
+                    <a href="{% url 'task_delete' task.id %}"
+                       class="btn btn-outline-danger btn-sm">Delete</a>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
+          {% empty %}
+            <p class="text-muted fst-italic">No completed tasks yet.</p>
+          {% endfor %}
         </div>
-        {% empty %}
-        <p class="text-muted fst-italic">No pending tasks. Great job!</p>
-        {% endfor %}
+      </div>
+      <!-- Pending Tasks -->
+      <div class="col-lg-6">
+        <h3 class="text-warning mb-4 fw-bold">
+          <i class="bi bi-hourglass-split me-2"></i>Pending
+        </h3>
+        <div class="row g-4">
+          {% for task in pending_tasks %}
+            <div class="col-12 col-md-6">
+              <div class="card border-warning border-2 shadow-sm h-100 rounded-4 hover-shadow">
+                <div class="card-body">
+                  <h5 class="card-title fw-bold text-warning">{{ task.title }}</h5>
+                  <p class="card-text small text-muted">{{ task.description|truncatewords:15 }}</p>
+                  <span class="badge bg-warning text-dark mb-2 px-3 py-2">Pending</span>
+                  <p class="mb-2">
+                    <strong>Category:</strong>
+                    <span class="badge bg-secondary">{{ task.get_category_display }}</span>
+                    <br>
+                    <strong>Due:</strong> {{ task.due_date }} at {{ task.due_time }}
+                  </p>
+                  <div class="d-flex gap-2 mt-3">
+                    <a href="{% url 'task_detail' task.id %}"
+                       class="btn btn-outline-info btn-sm">Details</a>
+                    <a href="{% url 'task_delete' task.id %}"
+                       class="btn btn-outline-danger btn-sm">Delete</a>
+                    <a href="{% url 'task_mark_completed' task.id %}"
+                       class="btn btn-success btn-sm">Done✅</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% empty %}
+            <p class="text-muted fst-italic">No pending tasks. Great job!</p>
+          {% endfor %}
+        </div>
       </div>
     </div>
-
   </div>
-</div>
-
 {% endblock %}

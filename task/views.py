@@ -98,15 +98,15 @@ def register(request):
         form = UserCreationForm()
     return render(request, 'register.html', {'form': form})
 
-#pass change
-def pass_change(request):
-    if request.method == 'POST':
-        form = SetPasswordForm(user=request.user,data = request.POST)
-        if form.is_valid():
-            user = form.save()
-            update_session_auth_hash(request,form.user)
-            messages.success(request,'Password Changed!')
-            return redirect('task_list')
-    else:
-        form = SetPasswordForm(user=request.user)
-    return render(request,'pass_change.html',{'form':form})
+# #pass change
+# def pass_change(request):
+#     if request.method == 'POST':
+#         form = SetPasswordForm(user=request.user,data = request.POST)
+#         if form.is_valid():
+#             user = form.save()
+#             update_session_auth_hash(request,form.user)
+#             messages.success(request,'Password Changed!')
+#             return redirect('task_list')
+#     else:
+#         form = SetPasswordForm(user=request.user)
+#     return render(request,'pass_change.html',{'form':form})
